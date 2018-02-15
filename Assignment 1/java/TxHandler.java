@@ -24,7 +24,7 @@ public class TxHandler {
 
     private double inputValid(UTXOPool pool, Transaction tx) {
       Set<UTXO> used = new HashSet<>();
-      sumIn = 0;
+      double sumIn = 0;
 
       for (int i = 0; i < tx.numInputs(); i++) {
         Transaction.Input input = tx.getInput(i);
@@ -42,7 +42,7 @@ public class TxHandler {
 
 
         RSAKey pubKey = prevTxOut.address;
-        byte[] message = tx.getRawDataToSign(c);
+        byte[] message = tx.getRawDataToSign(i);
         byte[] signature = input.signature;
 
         //Verify Signature
@@ -57,9 +57,9 @@ public class TxHandler {
     }
 
     private double outputValid(Transaction tx) {
-        sumOut = 0;
-        for (int c = 0; c < tx.numOutputs(); c++) {
-            Transaction.Output out = tx.getOutput(c);
+        double sumOut = 0;
+        for (int i = 0; i < tx.numOutputs(); i++) {
+            Transaction.Output out = tx.getOutput(i);
             if (out.value < 0) {
                 return Double.MAX_VALUE; //So sumIn always <
             }
